@@ -22,7 +22,7 @@ function Favourites() {
           }}
         >
           {favorites.map((movie) => (
-            <MovieCard key={movie.imdbID} movie={movie} />
+            <MovieCard key={movie.imdbID} movie={movie} showRemoveButton />
           ))}
         </div>
       )}

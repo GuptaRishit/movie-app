@@ -2,19 +2,11 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { MovieContext } from "../context/Moviecontext";
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, showRemoveButton = false }) {
   const { addToFavorites, removeFromFavorites, isFavorite } =
     useContext(MovieContext);
 
   const favorite = isFavorite(movie.imdbID);
-
-  const handleFavourite = () => {
-    if (favorite) {
-      removeFromFavorites(movie.imdbID);
-    } else {
-      addToFavorites(movie);
-    }
-  };
 
   return (
     <div>
@@ -27,9 +19,17 @@ function MovieCard({ movie }) {
       <h3>{movie.Title}</h3>
       <p>{movie.Year}</p>
 
-      <button onClick={handleFavourite}>
-        {favorite ? "Remove from Favourites" : "Add to Favourites"}
-      </button>
+      {showRemoveButton ? (
+        <button onClick={() => removeFromFavorites(movie.imdbID)}>
+          Remove from Favourites
+        </button>
+      ) : (
+        !favorite && (
+          <button onClick={() => addToFavorites(movie)}>
+            Add to Favourites
+          </button>
+        )
+      )}
 
       <br />
       <Link to={`/movie/${movie.imdbID}`}>View Details</Link>
