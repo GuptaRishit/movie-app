@@ -16,26 +16,28 @@ function Search() {
   const { data: movies, loading, error } = useFetch(url);
 
   return (
-    <div>
-      <h1>Search Movies</h1>
-      <Searchbar onSearch={setQuery} />
+    <div className="min-h-[calc(100svh-72px)] bg-slate-950 text-white">
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+            Search Movies
+          </h1>
+          <p className="mt-2 text-sm text-white/70">
+            Type a movie name and press Search.
+          </p>
+        </div>
 
-      {loading && <Loader />}
-      {error && <p>{error}</p>}
+        <Searchbar onSearch={setQuery} />
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "16px",
-          justifyContent: "center",
-          padding: "16px",
-        }}
-      >
-        {Array.isArray(movies) &&
-          movies.map((movie) => (
-            <MovieCard key={movie.imdbID} movie={movie} />
-          ))}
+        {loading && <Loader />}
+        {error && <p className="mt-3 text-red-400">{error}</p>}
+
+        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.isArray(movies) &&
+            movies.map((movie) => (
+              <MovieCard key={movie.imdbID} movie={movie} />
+            ))}
+        </div>
       </div>
     </div>
   );

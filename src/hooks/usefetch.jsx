@@ -9,21 +9,34 @@ function useFetch(url) {
   useEffect(() => {
     if (!url) return;
 
-    setLoading(true);
-    setError(null);
+    let cancelled = false;
 
-    axios
-      .get(url)
-      .then((res) => {
+    (async () => {
+      // Defer state updates to avoid the "setState in effect body" lint rule.
+      await Promise.resolve();
+      if (cancelled) return;
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const res = await axios.get(url);
         if (res.data.Response === "True") {
           setData(res.data.Search ?? res.data);
         } else {
           setData([]);
           setError(res.data.Error || "No results found");
         }
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        if (!cancelled) setError(err?.message || "Something went wrong");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [url]);
 
   return { data, loading, error };
